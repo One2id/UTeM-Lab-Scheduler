@@ -64,25 +64,21 @@ void loadBookingsFromFile();
 void saveStudentsToFile();
 void loadStudentsFromFile();
 
-void viewSummary();
 void pauseScreen();
 void printHeader(const char* title);
 
 // ─── Utility ─────────────────────────────────────────────────────────────────
 
-// Clears the console screen (Windows-compatible for UTeM labs)
 void clearScreen() {
     system("cls");
 }
 
-// Pauses and waits for any key before returning to menu
 void pauseScreen() {
     cout << "\nPress Enter to continue...";
     cin.ignore();
     cin.get();
 }
 
-// Prints a consistent section header
 void printHeader(const char* title) {
     cout << "\n=========================================\n";
     cout << "  " << title << "\n";
@@ -110,15 +106,13 @@ void saveBookingsToFile() {
 // Loads bookings from bookings.txt on program start
 void loadBookingsFromFile() {
     ifstream file("bookings.txt");
-    if (!file) return; // file may not exist yet
+    if (!file) return;
 
     bookingCount = 0;
     char line[100];
     while (file.getline(line, 100) && bookingCount < 100) {
-        // Parse CSV line: bookingId,studentId,equipmentId,date
         int bId, sId, eId;
         char date[12];
-
         if (sscanf(line, "%d,%d,%d,%11s", &bId, &sId, &eId, date) == 4) {
             bookings[bookingCount].bookingId   = bId;
             bookings[bookingCount].studentId   = sId;
@@ -154,27 +148,19 @@ void loadStudentsFromFile() {
     studentCount = 0;
     char line[100];
     while (file.getline(line, 100) && studentCount < 50) {
-        int id;
-        char name[50], course[30];
-        // Find first comma
         char* p1 = strchr(line, ',');
         if (!p1) continue;
         *p1 = '\0';
-        id = atoi(line);
+        int id = atoi(line);
 
-        // Find second comma
         char* p2 = strchr(p1 + 1, ',');
         if (!p2) continue;
         *p2 = '\0';
-        strncpy(name, p1 + 1, 49);
-        name[49] = '\0';
-        strncpy(course, p2 + 1, 29);
-        course[29] = '\0';
 
         students[studentCount].id = id;
-        strncpy(students[studentCount].name, name, 49);
+        strncpy(students[studentCount].name, p1 + 1, 49);
         students[studentCount].name[49] = '\0';
-        strncpy(students[studentCount].course, course, 29);
+        strncpy(students[studentCount].course, p2 + 1, 29);
         students[studentCount].course[29] = '\0';
         studentCount++;
     }
@@ -199,7 +185,6 @@ void addStudent() {
     cin >> s.id;
     cin.ignore();
 
-    // Check for duplicate ID
     for (int i = 0; i < studentCount; i++) {
         if (students[i].id == s.id) {
             cout << "Error: Student ID " << s.id << " already exists.\n";
@@ -248,8 +233,8 @@ void viewStudents() {
     cout << "-----  ---------------------------------  ----------------------------\n";
 
     for (int i = 0; i < studentCount; i++) {
-        cout.width(5);  cout << left << students[i].id << "  ";
-        cout.width(33); cout << left << students[i].name << "  ";
+        cout.width(5);  cout << left << students[i].id     << "  ";
+        cout.width(33); cout << left << students[i].name   << "  ";
         cout.width(28); cout << left << students[i].course << "\n";
     }
 
@@ -262,8 +247,8 @@ void searchStudent(int id) {
     for (int i = 0; i < studentCount; i++) {
         if (students[i].id == id) {
             cout << "\nStudent Found:\n";
-            cout << "  ID     : " << students[i].id << "\n";
-            cout << "  Name   : " << students[i].name << "\n";
+            cout << "  ID     : " << students[i].id     << "\n";
+            cout << "  Name   : " << students[i].name   << "\n";
             cout << "  Course : " << students[i].course << "\n";
             return;
         }
@@ -271,7 +256,6 @@ void searchStudent(int id) {
     cout << "\nStudent with ID " << id << " not found.\n";
 }
 
-// Student sub-menu
 void studentMenu() {
     int choice;
     do {
@@ -287,12 +271,8 @@ void studentMenu() {
         cin >> choice;
 
         switch (choice) {
-            case 1:
-                addStudent();
-                break;
-            case 2:
-                viewStudents();
-                break;
+            case 1: addStudent();   break;
+            case 2: viewStudents(); break;
             case 3: {
                 int sid;
                 clearScreen();
@@ -303,8 +283,7 @@ void studentMenu() {
                 pauseScreen();
                 break;
             }
-            case 0:
-                break;
+            case 0: break;
             default:
                 cout << "Invalid choice. Please try again.\n";
                 pauseScreen();
@@ -312,12 +291,12 @@ void studentMenu() {
     } while (choice != 0);
 }
 
-// ─── Equipment Module ─────────────────────────────────────────────────────────
+// ─── Lab Equipment Module ─────────────────────────────────────────────────────
 
-// Adds a new equipment record to the equipment array
+// Adds a new lab equipment record to the equipment array
 void addEquipment() {
     clearScreen();
-    printHeader("ADD EQUIPMENT");
+    printHeader("ADD LAB EQUIPMENT");
 
     if (equipmentCount >= 30) {
         cout << "Maximum equipment limit (30) reached.\n";
@@ -330,7 +309,6 @@ void addEquipment() {
     cin >> e.id;
     cin.ignore();
 
-    // Check for duplicate ID
     for (int i = 0; i < equipmentCount; i++) {
         if (equipment[i].id == e.id) {
             cout << "Error: Equipment ID " << e.id << " already exists.\n";
@@ -358,17 +336,17 @@ void addEquipment() {
     equipment[equipmentCount] = e;
     equipmentCount++;
 
-    cout << "\nEquipment added successfully!\n";
+    cout << "\nLab equipment added successfully!\n";
     pauseScreen();
 }
 
-// Displays all equipment in a table
+// Displays all lab equipment in a table
 void viewEquipment() {
     clearScreen();
-    printHeader("EQUIPMENT LIST");
+    printHeader("LAB EQUIPMENT LIST");
 
     if (equipmentCount == 0) {
-        cout << "No equipment records yet.\n";
+        cout << "No lab equipment records yet.\n";
         pauseScreen();
         return;
     }
@@ -378,16 +356,16 @@ void viewEquipment() {
     cout << "-----  ---------------------------------  --------\n";
 
     for (int i = 0; i < equipmentCount; i++) {
-        cout.width(5);  cout << left << equipment[i].id << "  ";
-        cout.width(33); cout << left << equipment[i].name << "  ";
+        cout.width(5);  cout << left << equipment[i].id       << "  ";
+        cout.width(33); cout << left << equipment[i].name     << "  ";
         cout.width(8);  cout << left << equipment[i].quantity << "\n";
     }
 
-    cout << "\nTotal Equipment Types: " << equipmentCount << "\n";
+    cout << "\nTotal Lab Equipment: " << equipmentCount << "\n";
     pauseScreen();
 }
 
-// Updates the quantity of an equipment item by ID
+// Updates the quantity of a lab equipment item by ID
 void updateQuantity(int id) {
     for (int i = 0; i < equipmentCount; i++) {
         if (equipment[i].id == id) {
@@ -408,28 +386,23 @@ void updateQuantity(int id) {
     cout << "Equipment with ID " << id << " not found.\n";
 }
 
-// Equipment sub-menu
 void equipmentMenu() {
     int choice;
     do {
         clearScreen();
         cout << "\n=========================================\n";
-        cout << "       EQUIPMENT INVENTORY\n";
+        cout << "       LAB EQUIPMENT INVENTORY\n";
         cout << "=========================================\n";
-        cout << "1. Add New Equipment\n";
-        cout << "2. View All Equipment\n";
+        cout << "1. Add New Lab Equipment\n";
+        cout << "2. View All Lab Equipment\n";
         cout << "3. Update Equipment Quantity\n";
         cout << "0. Back to Main Menu\n";
         cout << "\nEnter your choice: ";
         cin >> choice;
 
         switch (choice) {
-            case 1:
-                addEquipment();
-                break;
-            case 2:
-                viewEquipment();
-                break;
+            case 1: addEquipment();  break;
+            case 2: viewEquipment(); break;
             case 3: {
                 int eid;
                 clearScreen();
@@ -440,8 +413,7 @@ void equipmentMenu() {
                 pauseScreen();
                 break;
             }
-            case 0:
-                break;
+            case 0: break;
             default:
                 cout << "Invalid choice. Please try again.\n";
                 pauseScreen();
@@ -451,7 +423,7 @@ void equipmentMenu() {
 
 // ─── Booking Module ───────────────────────────────────────────────────────────
 
-// Adds a new equipment booking
+// Books a lab equipment item for a student
 void addBooking() {
     clearScreen();
     printHeader("ADD BOOKING");
@@ -469,7 +441,7 @@ void addBooking() {
     }
 
     if (equipmentCount == 0) {
-        cout << "No equipment available. Please add equipment first.\n";
+        cout << "No lab equipment available. Please add equipment first.\n";
         pauseScreen();
         return;
     }
@@ -477,9 +449,8 @@ void addBooking() {
     Booking b;
     b.bookingId = bookingCount + 1;
 
-    // Validate student ID
     int sId;
-    cout << "Enter Student ID    : ";
+    cout << "Enter Student ID      : ";
     cin >> sId;
     bool studentFound = false;
     for (int i = 0; i < studentCount; i++) {
@@ -492,9 +463,8 @@ void addBooking() {
     }
     b.studentId = sId;
 
-    // Validate equipment ID
     int eId;
-    cout << "Enter Equipment ID  : ";
+    cout << "Enter Equipment ID    : ";
     cin >> eId;
     int eIdx = -1;
     for (int i = 0; i < equipmentCount; i++) {
@@ -506,8 +476,7 @@ void addBooking() {
         return;
     }
     if (equipment[eIdx].quantity <= 0) {
-        cout << "Error: Equipment '" << equipment[eIdx].name
-             << "' is out of stock.\n";
+        cout << "Error: '" << equipment[eIdx].name << "' is out of stock.\n";
         pauseScreen();
         return;
     }
@@ -522,9 +491,7 @@ void addBooking() {
         return;
     }
 
-    // Reduce equipment quantity by 1
     equipment[eIdx].quantity--;
-
     bookings[bookingCount] = b;
     bookingCount++;
     saveBookingsToFile();
@@ -559,13 +526,12 @@ void viewBookings() {
     pauseScreen();
 }
 
-// Booking sub-menu
 void bookingMenu() {
     int choice;
     do {
         clearScreen();
         cout << "\n=========================================\n";
-        cout << "       EQUIPMENT BOOKING\n";
+        cout << "       LAB EQUIPMENT BOOKING\n";
         cout << "=========================================\n";
         cout << "1. Make New Booking\n";
         cout << "2. View All Bookings\n";
@@ -574,14 +540,9 @@ void bookingMenu() {
         cin >> choice;
 
         switch (choice) {
-            case 1:
-                addBooking();
-                break;
-            case 2:
-                viewBookings();
-                break;
-            case 0:
-                break;
+            case 1: addBooking();   break;
+            case 2: viewBookings(); break;
+            case 0: break;
             default:
                 cout << "Invalid choice. Please try again.\n";
                 pauseScreen();
@@ -589,24 +550,8 @@ void bookingMenu() {
     } while (choice != 0);
 }
 
-// ─── Summary Report ───────────────────────────────────────────────────────────
-
-// Displays a summary of all records in the system
-void viewSummary() {
-    clearScreen();
-    printHeader("SUMMARY REPORT");
-
-    cout << "\n";
-    cout << "Total Students Registered : " << studentCount   << "\n";
-    cout << "Total Equipment Types     : " << equipmentCount << "\n";
-    cout << "Total Bookings Made       : " << bookingCount   << "\n";
-
-    pauseScreen();
-}
-
 // ─── Main Menu ────────────────────────────────────────────────────────────────
 
-// Main application loop with do-while and switch
 void mainMenu() {
     int choice;
     do {
@@ -616,9 +561,8 @@ void mainMenu() {
         cout << "  Science/Chemistry Lab Management System\n";
         cout << "=========================================\n";
         cout << "1. Student Management\n";
-        cout << "2. Equipment Inventory\n";
-        cout << "3. Equipment Booking\n";
-        cout << "4. View Summary Report\n";
+        cout << "2. Lab Equipment Inventory\n";
+        cout << "3. Lab Equipment Booking\n";
         cout << "0. Exit\n";
         cout << "\nEnter your choice: ";
         cin >> choice;
@@ -627,7 +571,6 @@ void mainMenu() {
             case 1: studentMenu();   break;
             case 2: equipmentMenu(); break;
             case 3: bookingMenu();   break;
-            case 4: viewSummary();   break;
             case 0:
                 cout << "\nSaving data...\n";
                 saveBookingsToFile();
@@ -635,7 +578,7 @@ void mainMenu() {
                 cout << "Thank you for using SciLab Manager. Goodbye!\n\n";
                 break;
             default:
-                cout << "Invalid choice. Please enter 0-4.\n";
+                cout << "Invalid choice. Please enter 0-3.\n";
                 pauseScreen();
         }
     } while (choice != 0);
@@ -644,7 +587,6 @@ void mainMenu() {
 // ─── Entry Point ──────────────────────────────────────────────────────────────
 
 int main() {
-    // Load persisted data on startup
     loadStudentsFromFile();
     loadBookingsFromFile();
 
