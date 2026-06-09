@@ -1,37 +1,36 @@
-# SciLab Manager v1.0
+# Lab Booking System
 
-A console-based C++ application for managing a Science/Chemistry lab — built as a course project for **BAXU1113 Programming Technique** at UTeM.
+A simple console-based C++ program for booking science labs at a university.
+Built for **BAXU1113 Programming Technique** | Sem 2, 2025/2026.
 
 ---
 
-## Features
+## What It Does
 
-| Module | Operations |
+| Option | Description |
 |---|---|
-| **Student Management** | Add student, view all students, search by ID |
-| **Equipment Inventory** | Add equipment, view all equipment, update quantity |
-| **Equipment Booking** | Book equipment, view all bookings, auto-save to file |
-| **Summary Report** | Total counts for students, equipment, and bookings |
+| Add Booking | Enter your name, pick a lab, pick a time, enter a date |
+| View All Bookings | See all bookings in a table |
+| Modify Booking | Find a booking by ID and update its details |
+| Delete Booking | Find a booking by ID and remove it |
+
+Bookings are saved to `bookings.txt` automatically after every change and loaded back when the program starts.
 
 ---
 
 ## Getting Started
 
-### Requirements
-- A C++ compiler (g++, MinGW, or MSVC)
-- Windows (uses `system("cls")` for screen clearing)
-
 ### Compile & Run
 
 ```bash
-g++ -o SciLabManager main.cpp
-./SciLabManager
+g++ -o LabBooking lab_booking.cpp
+./LabBooking
 ```
 
 On Windows (MinGW):
 ```bash
-g++ -o SciLabManager.exe main.cpp
-SciLabManager.exe
+g++ -o LabBooking.exe lab_booking.cpp
+LabBooking.exe
 ```
 
 ---
@@ -40,24 +39,29 @@ SciLabManager.exe
 
 ```
 scilab-manager/
-├── main.cpp          # Entire source code (single file)
-├── bookings.txt      # Auto-generated at runtime
-└── students.txt      # Auto-generated at runtime
+├── lab_booking.cpp   # Entire source code (single file)
+└── bookings.txt      # Auto-generated at runtime
 ```
-
-Data files are created automatically on first run and persist across sessions.
 
 ---
 
-## Data Structures
+## Available Labs
 
-```cpp
-struct Student   { int id; char name[50]; char course[30]; };
-struct Equipment { int id; char name[50]; int quantity; };
-struct Booking   { int bookingId; int studentId; int equipmentId; char date[12]; };
+```
+1. Chemistry Lab
+2. Biology Lab
+3. Physics Lab
 ```
 
-Limits: 50 students · 30 equipment types · 100 bookings
+## Available Times
+
+```
+1. 8:00 AM
+2. 10:00 AM
+3. 12:00 PM
+4. 2:00 PM
+5. 4:00 PM
+```
 
 ---
 
@@ -65,40 +69,43 @@ Limits: 50 students · 30 equipment types · 100 bookings
 
 ### Main Menu
 ```
-=========================================
-          SCILAB MANAGER v1.0
-  Science/Chemistry Lab Management System
-=========================================
-1. Student Management
-2. Equipment Inventory
-3. Equipment Booking
-4. View Summary Report
+==============================
+    LAB BOOKING SYSTEM
+==============================
+1. Add Booking
+2. View All Bookings
+3. Modify Booking
+4. Delete Booking
 0. Exit
-
-Enter your choice: _
+==============================
+Enter choice: _
 ```
 
-### Summary Report
+### View All Bookings
 ```
-=========================================
-  SUMMARY REPORT
-=========================================
+ID  Name                 Lab              Time       Date
+--  -------------------  ---------------  ---------  ----------
+1   Ali                  Chemistry Lab    10:00 AM   15/06/2026
+2   Sara                 Biology Lab      8:00 AM    16/06/2026
 
-Total Students Registered : 5
-Total Equipment Types     : 3
-Total Bookings Made       : 7
+Total bookings: 2
 ```
 
 ---
 
-## Technical Highlights
+## Data Structure
 
-- **Selection** — `if/else` for input validation; `switch` for all menu choices
-- **Repetition** — `do-while` for every menu loop; `for` to display records
-- **Functions** — one function per feature (`addStudent`, `viewEquipment`, etc.)
-- **Arrays** — global arrays of structs for all data
-- **File I/O** — CSV-format `.txt` files, loaded on startup and saved on changes
-- **Structs** — `Student`, `Equipment`, `Booking`
+```cpp
+struct Booking {
+    int  id;
+    char name[50];
+    char lab[30];
+    char time[10];
+    char date[12];
+};
+```
+
+Max: 100 bookings stored in a global array.
 
 ---
 
@@ -106,4 +113,3 @@ Total Bookings Made       : 7
 
 - **Course:** BAXU1113 Programming Technique — Sem 2, 2025/2026
 - **Institution:** UTeM
-- **Deliverable:** 20% project
