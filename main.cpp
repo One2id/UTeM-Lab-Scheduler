@@ -9,6 +9,15 @@
 #include <cstdlib>
 using namespace std;
 
+void clearScreen() {
+    cout << "\033[2J\033[H";
+}
+
+// Clears any leftover characters from the input buffer
+void flushInput() {
+    cin.ignore(1000, '\n');
+}
+
 struct Booking {
     int  id;
     char name[50];
@@ -30,7 +39,7 @@ void pickLab(char* dest) {
     cout << "2. Biology Lab\n";
     cout << "3. Physics Lab\n";
     cout << "Enter choice        : ";
-    int c; cin >> c;
+    int c; cin >> c; flushInput();
     if (c < 1 || c > 3) c = 1;
     strncpy(dest, LABS[c - 1], 29);
     dest[29] = '\0';
@@ -45,13 +54,13 @@ void pickTime(char* dest) {
     cout << "4. 2:00 PM\n";
     cout << "5. 4:00 PM\n";
     cout << "Enter choice        : ";
-    int c; cin >> c;
+    int c; cin >> c; flushInput();
     if (c < 1 || c > 5) c = 1;
     strncpy(dest, TIMES[c - 1], 9);
     dest[9] = '\0';
 }
 
-// Saves all bookings to bookings.txt (overwrites file each time)
+// Saves all bookings to bookings.txt (overwrites each time)
 void saveToFile() {
     ofstream file("bookings.txt");
     for (int i = 0; i < totalBookings; i++) {
@@ -97,7 +106,7 @@ void loadFromFile() {
 
 // Adds a new booking and saves to file
 void addBooking() {
-    system("cls");
+    clearScreen();
     if (totalBookings >= 100) {
         cout << "Booking limit reached.\n";
         return;
@@ -107,14 +116,12 @@ void addBooking() {
     b.id = (totalBookings == 0) ? 1 : bookings[totalBookings - 1].id + 1;
 
     cout << "Enter your name     : ";
-    cin.ignore();
     cin.getline(b.name, 50);
 
     pickLab(b.lab);
     pickTime(b.time);
 
     cout << "Enter date (DD/MM/YYYY): ";
-    cin.ignore();
     cin.getline(b.date, 12);
 
     bookings[totalBookings++] = b;
@@ -127,40 +134,36 @@ void addBooking() {
 
 // Displays all bookings in a table
 void viewBookings() {
-    system("cls");
+    clearScreen();
     cout << "==============================\n";
     cout << "      ALL BOOKINGS\n";
     cout << "==============================\n";
 
     if (totalBookings == 0) {
         cout << "No bookings yet.\n";
-        cout << "\nPress Enter to continue...";
-        cin.ignore(); cin.get();
-        return;
+    } else {
+        cout << "\n";
+        cout << "ID  Name                 Lab              Time       Date\n";
+        cout << "--  -------------------  ---------------  ---------  ----------\n";
+        for (int i = 0; i < totalBookings; i++) {
+            cout.width(2);  cout << left << bookings[i].id   << "  ";
+            cout.width(19); cout << left << bookings[i].name << "  ";
+            cout.width(15); cout << left << bookings[i].lab  << "  ";
+            cout.width(9);  cout << left << bookings[i].time << "  ";
+            cout.width(10); cout << left << bookings[i].date << "\n";
+        }
+        cout << "\nTotal bookings: " << totalBookings << "\n";
     }
 
-    cout << "\n";
-    cout << "ID  Name                 Lab              Time       Date\n";
-    cout << "--  -------------------  ---------------  ---------  ----------\n";
-
-    for (int i = 0; i < totalBookings; i++) {
-        cout.width(2);  cout << left << bookings[i].id   << "  ";
-        cout.width(19); cout << left << bookings[i].name << "  ";
-        cout.width(15); cout << left << bookings[i].lab  << "  ";
-        cout.width(9);  cout << left << bookings[i].time << "  ";
-        cout.width(10); cout << left << bookings[i].date << "\n";
-    }
-
-    cout << "\nTotal bookings: " << totalBookings << "\n";
     cout << "\nPress Enter to continue...";
-    cin.ignore(); cin.get();
+    cin.get();
 }
 
 // Finds a booking by ID and updates its details
 void modifyBooking() {
-    system("cls");
+    clearScreen();
     cout << "Enter Booking ID to modify: ";
-    int id; cin >> id;
+    int id; cin >> id; flushInput();
 
     for (int i = 0; i < totalBookings; i++) {
         if (bookings[i].id == id) {
@@ -171,14 +174,12 @@ void modifyBooking() {
                  << " | Date: " << bookings[i].date << "\n\n";
 
             cout << "Enter new name     : ";
-            cin.ignore();
             cin.getline(bookings[i].name, 50);
 
             pickLab(bookings[i].lab);
             pickTime(bookings[i].time);
 
             cout << "Enter new date     : ";
-            cin.ignore();
             cin.getline(bookings[i].date, 12);
 
             saveToFile();
@@ -191,19 +192,19 @@ void modifyBooking() {
 
     cout << "Booking ID " << id << " not found.\n";
     cout << "\nPress Enter to continue...";
-    cin.ignore(); cin.get();
+    cin.get();
 }
 
 // Finds a booking by ID and removes it
 void deleteBooking() {
-    system("cls");
+    clearScreen();
     cout << "Enter Booking ID to delete: ";
-    int id; cin >> id;
+    int id; cin >> id; flushInput();
 
     for (int i = 0; i < totalBookings; i++) {
         if (bookings[i].id == id) {
             cout << "\nAre you sure? (1 = Yes, 0 = No): ";
-            int confirm; cin >> confirm;
+            int confirm; cin >> confirm; flushInput();
 
             if (confirm == 1) {
                 for (int j = i; j < totalBookings - 1; j++)
@@ -214,21 +215,21 @@ void deleteBooking() {
             }
 
             cout << "\nPress Enter to continue...";
-            cin.ignore(); cin.get();
+            cin.get();
             return;
         }
     }
 
     cout << "Booking ID " << id << " not found.\n";
     cout << "\nPress Enter to continue...";
-    cin.ignore(); cin.get();
+    cin.get();
 }
 
 // Shows the main menu and handles user choice
 void mainMenu() {
     int choice;
     do {
-        system("cls");
+        clearScreen();
         cout << "==============================\n";
         cout << "    LAB BOOKING SYSTEM\n";
         cout << "==============================\n";
@@ -239,7 +240,7 @@ void mainMenu() {
         cout << "0. Exit\n";
         cout << "==============================\n";
         cout << "Enter choice: ";
-        cin >> choice;
+        cin >> choice; flushInput();
 
         switch (choice) {
             case 1: addBooking();    break;

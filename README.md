@@ -1,4 +1,4 @@
-# Lab Booking System
+# UTeM Lab Scheduler
 
 A simple console-based C++ program for booking science labs at a university.
 Built for **BAXU1113 Programming Technique** | Sem 2, 2025/2026.
