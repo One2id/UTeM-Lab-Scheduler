@@ -231,7 +231,7 @@ void mainMenu() {
     do {
         clearScreen();
         cout << "==============================\n";
-        cout << "    LAB BOOKING SYSTEM\n";
+        cout << "    UTEM-LAB-SCHEDULER\n";
         cout << "==============================\n";
         cout << "1. Add Booking\n";
         cout << "2. View All Bookings\n";
