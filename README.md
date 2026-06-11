@@ -23,14 +23,14 @@ Bookings are saved to `bookings.txt` automatically after every change and loaded
 ### Compile & Run
 
 ```bash
-g++ -o LabBooking lab_booking.cpp
-./LabBooking
+g++ -o UTeM-Lab-Scheduler main.cpp
+./UTeM-Lab-Scheduler
 ```
 
 On Windows (MinGW):
 ```bash
-g++ -o LabBooking.exe lab_booking.cpp
-LabBooking.exe
+g++ -o UTeM-Lab-Scheduler.exe main.cpp
+UTeM-Lab-Scheduler.exe
 ```
 
 ---
@@ -38,9 +38,10 @@ LabBooking.exe
 ## Project Structure
 
 ```
-scilab-manager/
-├── lab_booking.cpp   # Entire source code (single file)
-└── bookings.txt      # Auto-generated at runtime
+utem-lab-scheduler/
+├── main.cpp              # Entire source code (single file)
+├── UTeM-Lab-Scheduler    # Compiled binary
+└── bookings.txt          # Auto-generated at runtime
 ```
 
 ---
@@ -70,7 +71,7 @@ scilab-manager/
 ### Main Menu
 ```
 ==============================
-    LAB BOOKING SYSTEM
+    UTeM Lab Scheduler
 ==============================
 1. Add Booking
 2. View All Bookings
