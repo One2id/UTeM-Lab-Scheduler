@@ -1,5 +1,5 @@
 /*
- * Lab Booking System
+ * UTeM Lab Scheduler
  * Course: BAXU1113 Programming Technique | Sem 2, 2025/2026
  */
 
@@ -231,7 +231,7 @@ void mainMenu() {
     do {
         clearScreen();
         cout << "==============================\n";
-        cout << "    UTEM-LAB-SCHEDULER\n";
+        cout << "    UTeM Lab Scheduler\n";
         cout << "==============================\n";
         cout << "1. Add Booking\n";
         cout << "2. View All Bookings\n";
